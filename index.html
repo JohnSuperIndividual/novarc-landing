@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>NovArc API — Frontier AI at 1/10th the Price</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0a0f;color:#e8e8f0}
+a{color:#7c6af7;text-decoration:none}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;border-bottom:1px solid #1e1e2e;position:sticky;top:0;background:rgba(10,10,15,.92);backdrop-filter:blur(12px);z-index:100}
+.logo{font-size:1.3rem;font-weight:800;color:#fff}.logo span{color:#7c6af7}
+.nav-cta{background:#7c6af7;color:#fff;padding:.5rem 1.3rem;border-radius:7px;font-weight:600}
+.hero{text-align:center;padding:6rem 2rem 4rem;max-width:860px;margin:0 auto}
+.badge{display:inline-block;background:#1a1a2e;border:1px solid #2d2d50;color:#a89cf7;font-size:.78rem;font-weight:700;padding:.35rem 1rem;border-radius:99px;margin-bottom:1.6rem}
+h1{font-size:clamp(2.1rem,5vw,3.5rem);font-weight:800;line-height:1.13;color:#fff;margin-bottom:1.2rem}
+h1 em{color:#7c6af7;font-style:normal}
+.hero p{font-size:1.15rem;color:#9090b0;max-width:580px;margin:0 auto 2.5rem;line-height:1.75}
+.btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-p{background:#7c6af7;color:#fff;padding:.85rem 2.2rem;border-radius:9px;font-weight:700}
+.btn-s{background:transparent;color:#e8e8f0;padding:.85rem 2.2rem;border-radius:9px;font-weight:600;border:1px solid #2d2d50}
+.api-bar{background:#0f0f1a;border:1px solid #1e1e2e;border-radius:11px;padding:1rem 1.6rem;max-width:640px;margin:0 auto;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.api-label{color:#5a5a8a;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.api-url{font-family:monospace;color:#a89cf7;font-size:.9rem;word-break:break-all}
+.section{max-width:1100px;margin:0 auto;padding:5rem 2rem}
+.s-label{text-align:center;color:#7c6af7;font-weight:700;font-size:.82rem;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:.7rem}
+.s-title{text-align:center;font-size:clamp(1.7rem,3vw,2.5rem);font-weight:800;color:#fff;margin-bottom:3rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem}
+.card{background:#0f0f1a;border:1px solid #1e1e2e;border-radius:13px;padding:1.9rem}
+.card:hover{border-color:#3d3470}
+.icon{font-size:2rem;margin-bottom:.9rem}
+.card h3{color:#fff;font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
+.card p{color:#6868a0;line-height:1.65;font-size:.93rem}
+.pricing-bg{background:#070710;padding:5rem 2rem}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;max-width:980px;margin:0 auto}
+.plan{background:#0f0f1a;border:1px solid #1e1e2e;border-radius:15px;padding:2.2rem 2rem;display:flex;flex-direction:column;gap:1rem;position:relative}
+.plan.pop{border-color:#7c6af7}
+.pop-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#7c6af7;color:#fff;font-size:.73rem;font-weight:700;padding:.28rem .85rem;border-radius:99px}
+.plan-name{font-size:.9rem;font-weight:700;color:#a89cf7;text-transform:uppercase;letter-spacing:.8px}
+.plan-price{font-size:2.8rem;font-weight:800;color:#fff;line-height:1}
+.plan-price sub{font-size:1rem;font-weight:400;color:#5a5a8a;vertical-align:baseline}
+.plan-desc{color:#6868a0;font-size:.9rem;line-height:1.55;padding-bottom:.3rem;border-bottom:1px solid #1a1a2e}
+.feats{list-style:none;display:flex;flex-direction:column;gap:.6rem;flex:1}
+.feats li{font-size:.9rem;color:#9090b0;display:flex;align-items:flex-start;gap:.6rem}
+.feats li::before{content:"v";color:#7c6af7;font-weight:900}
+.plan-cta{display:block;text-align:center;background:#16162a;color:#d0d0f0;padding:.8rem;border-radius:9px;font-weight:600;border:1px solid #2a2a48;margin-top:.5rem}
+.plan.pop .plan-cta{background:#7c6af7;border-color:transparent;color:#fff}
+.code-wrap{max-width:860px;margin:5rem auto;padding:0 2rem}
+.code-box{background:#070710;border:1px solid #1e1e2e;border-radius:13px;overflow:hidden}
+.code-hdr{display:flex;align-items:center;gap:.5rem;padding:.85rem 1.3rem;border-bottom:1px solid #1e1e2e;background:#0e0e20}
+.dot{width:13px;height:13px;border-radius:50%}
+.code-box pre{padding:1.6rem;font-family:monospace;font-size:.84rem;line-height:1.85;color:#b8b8d8;overflow-x:auto;white-space:pre}
+footer{text-align:center;padding:2.8rem 2rem;color:#3a3a5a;font-size:.85rem;border-top:1px solid #111120}
+</style>
+</head>
+<body>
+<nav><div class="logo">Nov<span>Arc</span> API</div><a class="nav-cta" href="https://new-api-production-d6db.up.railway.app">Get Started Free</a></nav>
+<section class="hero">
+<div class="badge">Now in Public Beta</div>
+<h1>Frontier AI at <em>1/10th the Price</em></h1>
+<p>One API key. Every frontier model. DeepSeek, GPT-4o, Claude, Gemini - all through a single OpenAI-compatible endpoint at a fraction of the cost.</p>
+<div class="btns"><a class="btn-p" href="https://new-api-production-d6db.up.railway.app">Start Free Trial</a><a class="btn-s" href="#pricing">See Pricing</a></div>
+<div class="api-bar"><span class="api-label">API Base URL</span><span class="api-url">https://new-api-production-d6db.up.railway.app</span></div>
+</section>
+<section class="section">
+<div class="s-label">Why NovArc</div>
+<div class="s-title">Everything you need. Nothing you don't.</div>
+<div class="grid">
+<div class="card"><div class="icon">&#9889;</div><h3>Drop-in OpenAI Compatible</h3><p>Change one line of code. Works with the OpenAI Python SDK, Node SDK, LangChain, and every OpenAI-compatible client.</p></div>
+<div class="card"><div class="icon">&#127760;</div><h3>Multi-Model Router</h3><p>DeepSeek, GPT-4o, Claude, Gemini and more from a single endpoint with intelligent automatic fallback.</p></div>
+<div class="card"><div class="icon">&#128176;</div><h3>Transparent Pricing</h3><p>Pay for what you use. No hidden fees, no per-seat charges, no surprise bills.</p></div>
+<div class="card"><div class="icon">&#128202;</div><h3>Real-time Dashboard</h3><p>Monitor token usage, latency, costs, and error rates live. Full audit logs on every plan.</p></div>
+<div class="card"><div class="icon">&#128273;</div><h3>Team API Keys</h3><p>Issue scoped keys per team member. Set per-key quota limits and expiry dates.</p></div>
+<div class="card"><div class="icon">&#128737;</div><h3>Enterprise Ready</h3><p>SOC 2 compliant. Your data is never used for model training. SLA on Scale plan.</p></div>
+</div>
+</section>
+<div class="pricing-bg" id="pricing">
+<div class="s-label" style="text-align:center;padding-bottom:.7rem">Pricing</div>
+<div class="s-title">Simple, predictable plans</div>
+<div class="plans">
+<div class="plan">
+<div class="plan-name">Starter</div>
+<div class="plan-price">$9<sub>/month</sub></div>
+<div class="plan-desc">Perfect for indie developers and side projects.</div>
+<ul class="feats"><li>$9 monthly API credits</li><li>All supported models</li><li>Up to 5 API keys</li><li>Usage dashboard and logs</li><li>Community support</li></ul>
+<a class="plan-cta" href="https://new-api-production-d6db.up.railway.app">Get Started</a>
+</div>
+<div class="plan pop">
+<div class="pop-badge">Most Popular</div>
+<div class="plan-name">Pro</div>
+<div class="plan-price">$29<sub>/month</sub></div>
+<div class="plan-desc">For teams shipping production AI features at scale.</div>
+<ul class="feats"><li>$29 monthly API credits</li><li>Priority model routing</li><li>Up to 25 API keys</li><li>Advanced analytics</li><li>Email support 24h SLA</li><li>Webhook event alerts</li></ul>
+<a class="plan-cta" href="https://new-api-production-d6db.up.railway.app">Get Started</a>
+</div>
+<div class="plan">
+<div class="plan-name">Scale</div>
+<div class="plan-price">$79<sub>/month</sub></div>
+<div class="plan-desc">For high-volume apps that demand reliability guarantees.</div>
+<ul class="feats"><li>$79 monthly API credits</li><li>Dedicated routing lanes</li><li>Unlimited API keys</li><li>Full audit log export</li><li>Uptime SLA and priority support</li><li>Custom model weight tuning</li></ul>
+<a class="plan-cta" href="https://new-api-production-d6db.up.railway.app">Get Started</a>
+</div>
+</div>
+</div>
+<section class="code-wrap">
+<div class="s-title" style="text-align:center;font-size:1.9rem;font-weight:800;color:#fff;margin-bottom:1.6rem">Up and running in 30 seconds</div>
+<div class="code-box">
+<div class="code-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
+<pre>from openai import OpenAI
+client = OpenAI(
+    api_key="your-novarc-api-key",
+    base_url="https://new-api-production-d6db.up.railway.app/v1",
+)
+response = client.chat.completions.create(
+    model="deepseek-chat",
+    messages=[{"role": "user", "content": "Hello, NovArc!"}],
+)
+print(response.choices[0].message.content)</pre>
+</div>
+</section>
+<footer>2026 NovArc API - Frontier AI at 1/10th the Price - <a href="https://new-api-production-d6db.up.railway.app">Console</a></footer>
+</body>
+</html>
