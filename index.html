@@ -1,6 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NovArc API — Frontier AI at 1/10th the Price</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --border: #1e1e2e;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --card: #16161f;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 5%; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(10,10,15,0.92); backdrop-filter: blur(12px); z-index: 100; }
+    .logo { font-size: 1.35rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; margin-left: 2rem; transition: color .2s; }
+    nav a:hover { color: var(--text); }
+    .btn-nav { background: var(--accent); color: #fff !important; padding: 0.5rem 1.2rem; border-radius: 6px; font-weight: 600; }
+    .btn-nav:hover { background: #5a52e0 !important; }
+
+    .hero { text-align: center; padding: 6rem 5% 4rem; max-width: 860px; margin: 0 auto; }
+    .badge { display: inline-block; background: rgba(108,99,255,.15); color: var(--accent); border: 1px solid rgba(108,99,255,.3); border-radius: 20px; padding: .3rem 1rem; font-size: .8rem; font-weight: 600; margin-bottom: 1.5rem; letter-spacing: .05em; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 900; line-height: 1.15; margin-bottom: 1.4rem; }
+    .hero h1 span { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 1.15rem; color: var(--muted); max-width: 600px; margin: 0 auto 2.5rem; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: var(--accent); color: #fff; padding: .8rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 1rem; transition: transform .15s, background .2s; display: inline-block; }
+    .btn-primary:hover { background: #5a52e0; transform: translateY(-1px); }
+    .btn-secondary { border: 1px solid var(--border); color: var(--text); padding: .8rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: border-color .2s; display: inline-block; }
+    .btn-secondary:hover { border-color: var(--accent); }
+    .api-url { display: inline-flex; align-items: center; gap: .5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: .7rem 1.4rem; font-family: 'SF Mono', Consolas, monospace; font-size: .9rem; color: var(--accent2); margin-top: 2.5rem; }
+    .api-url span { color: var(--muted); font-size: .8rem; margin-right: .3rem; }
+
+    .stats { display: flex; justify-content: center; gap: 4rem; padding: 3rem 5%; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { color: var(--muted); font-size: .85rem; margin-top: .2rem; }
+
+    .section { padding: 5rem 5%; max-width: 1100px; margin: 0 auto; }
+    .section-label { color: var(--accent); font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 1rem; }
+    .section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 1rem; }
+    .section > p { color: var(--muted); max-width: 600px; margin-bottom: 2.5rem; font-size: 1rem; }
+
+    pre { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; overflow-x: auto; font-family: 'SF Mono', Consolas, monospace; font-size: .88rem; line-height: 1.7; }
+    .diff-remove { color: #f87171; background: rgba(248,113,113,.08); display: block; padding: 0 .5rem; margin: 0 -.5rem; }
+    .diff-add { color: #4ade80; background: rgba(74,222,128,.08); display: block; padding: 0 .5rem; margin: 0 -.5rem; }
+    .diff-ctx { color: var(--muted); display: block; }
+    .kw { color: #c084fc; }
+    .str { color: #86efac; }
+    .fn { color: #60a5fa; }
+    .cm { color: #64748b; font-style: italic; }
+
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+    .price-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; position: relative; transition: border-color .2s; }
+    .price-card:hover { border-color: var(--accent); }
+    .price-card.popular { border-color: var(--accent); }
+    .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-size: .75rem; font-weight: 700; padding: .25rem .9rem; border-radius: 20px; white-space: nowrap; }
+    .price-name { font-size: .9rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+    .price-amount { font-size: 2.4rem; font-weight: 900; margin: .5rem 0; }
+    .price-amount sup { font-size: 1rem; vertical-align: top; margin-top: .6rem; color: var(--muted); }
+    .price-amount span { font-size: .95rem; color: var(--muted); font-weight: 400; }
+    .price-tokens { color: var(--accent2); font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; }
+    .price-features { list-style: none; margin-bottom: 1.8rem; }
+    .price-features li { color: var(--muted); font-size: .9rem; padding: .35rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .5rem; }
+    .price-features li::before { content: "✓"; color: var(--accent2); font-weight: 700; }
+    .btn-card { display: block; text-align: center; padding: .75rem; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: .95rem; transition: background .2s, transform .15s; }
+    .btn-card-primary { background: var(--accent); color: #fff; }
+    .btn-card-primary:hover { background: #5a52e0; transform: translateY(-1px); }
+    .btn-card-outline { border: 1px solid var(--border); color: var(--text); }
+    .btn-card-outline:hover { border-color: var(--accent); }
+
+    .comparison-wrap { overflow-x: auto; margin-top: 1rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    thead th { background: var(--surface); padding: 1rem 1.5rem; text-align: left; color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; border-bottom: 2px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+    tbody tr:hover { background: var(--surface); }
+    tbody td { padding: .9rem 1.5rem; }
+    .provider-name { font-weight: 700; }
+    .novarc-row td { color: var(--text); }
+    .novarc-row .provider-name { color: var(--accent2); }
+    .savings-badge { background: rgba(74,222,128,.12); color: #4ade80; border-radius: 4px; padding: .15rem .5rem; font-size: .78rem; font-weight: 700; margin-left: .5rem; }
+    .cheaper { color: #4ade80; font-weight: 700; }
+    .expensive { color: var(--muted); }
+
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+    .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.8rem; transition: border-color .2s; }
+    .feature-card:hover { border-color: var(--accent); }
+    .feature-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .5rem; }
+    .feature-card p { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+
+    .faq-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+    .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .faq-q { width: 100%; text-align: left; background: none; border: none; color: var(--text); font-size: 1rem; font-weight: 600; padding: 1.4rem 1.8rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: color .2s; }
+    .faq-q:hover { color: var(--accent); }
+    .faq-q .arrow { font-size: .75rem; color: var(--muted); transition: transform .2s; flex-shrink: 0; margin-left: 1rem; }
+    .faq-item.open .arrow { transform: rotate(90deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+    .faq-item.open .faq-a { max-height: 400px; }
+    .faq-a p { padding: 0 1.8rem 1.4rem; color: var(--muted); font-size: .95rem; line-height: 1.65; }
+    .faq-a code { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: .1rem .4rem; font-family: monospace; font-size: .85rem; color: var(--accent2); }
+    .faq-a a { color: var(--accent2); }
+
+    .cta-section { text-align: center; padding: 6rem 5%; background: linear-gradient(180deg, var(--bg) 0%, rgba(108,99,255,.06) 50%, var(--bg) 100%); }
+    .cta-section h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 1rem; }
+    .cta-section p { color: var(--muted); max-width: 520px; margin: 0 auto 2.5rem; }
+
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-size: 1.1rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    footer p { color: var(--muted); font-size: .85rem; margin-top: .3rem; }
+    footer a { color: var(--muted); text-decoration: none; font-size: .85rem; margin-left: 1.5rem; transition: color .2s; }
+    footer a:hover { color: var(--text); }
+    .footer-contact a.email-link { color: var(--accent2); }
+
+    @media (max-width: 640px) {
+      .stats { gap: 2rem; }
+      nav a:not(.btn-nav) { display: none; }
+      footer { flex-direction: column; text-align: center; }
+      footer a { margin-left: .8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">NovArc API</div>
+  <div>
+    <a href="#pricing">Pricing</a>
+    <a href="#comparison">Compare</a>
+    <a href="#faq">FAQ</a>
+    <a href="https://new-api-production-d6db.up.railway.app/register" class="btn-nav">Get Started Free</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="badge">🚀 OpenAI-Compatible &middot; No Credit Card Required</div>
+  <h1>Frontier AI at<br><span>1/10th the Price</span></h1>
+  <p>Drop-in replacement for OpenAI API. Access DeepSeek, Qwen, and more &mdash; with one API key, unified billing, and enterprise-grade reliability.</p>
+  <div class="hero-btns">
+    <a href="https://new-api-production-d6db.up.railway.app/register" class="btn-primary">Get Started Free &rarr;</a>
+    <a href="#comparison" class="btn-secondary">See Price Comparison</a>
+  </div>
+  <div class="api-url">
+    <span>API Base URL</span>
+    https://new-api-production-d6db.up.railway.app/v1
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">90%</div><div class="stat-label">Cheaper than GPT-4o</div></div>
+  <div class="stat"><div class="stat-num">1 line</div><div class="stat-label">Code change to switch</div></div>
+  <div class="stat"><div class="stat-num">5M</div><div class="stat-label">Free tokens on signup</div></div>
+  <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Models available</div></div>
+</div>
+
+<section class="section" id="quickstart">
+  <div class="section-label">Quickstart</div>
+  <h2>One line to switch from OpenAI</h2>
+  <p>NovArc is 100% OpenAI-compatible. Change one URL and your existing code works instantly &mdash; no other modifications needed.</p>
+<pre><span class="diff-remove">- base_url="https://api.openai.com/v1"   <span class="cm"># OpenAI: ~$15/M output tokens</span></span>
+<span class="diff-add">+ base_url="https://new-api-production-d6db.up.railway.app/v1"  <span class="cm"># NovArc: ~$1.25/M output tokens</span></span>
+<span class="diff-ctx">
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+client = OpenAI(
+    base_url=<span class="str">"https://new-api-production-d6db.up.railway.app/v1"</span>,
+    api_key=<span class="str">"your-novarc-key"</span>,
+)
+
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"deepseek-chat"</span>,
+    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Hello!"</span>}],
+)
+<span class="kw">print</span>(response.choices[0].message.content)</span></pre>
+  <p style="color: var(--muted); font-size: .9rem; margin-top: 1.2rem;">&#128161; <strong style="color: var(--text);">That's it.</strong> Same SDK, same format &mdash; 90% cheaper.</p>
+</section>
+
+<section class="section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2>Simple, transparent pricing</h2>
+  <p>Start free with 5M tokens. Scale as you grow.</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Starter</div>
+      <div class="price-amount"><sup>$</sup>9<span>/mo</span></div>
+      <div class="price-tokens">5M tokens / month</div>
+      <ul class="price-features">
+        <li>All available models</li>
+        <li>OpenAI-compatible API</li>
+        <li>Dashboard &amp; analytics</li>
+        <li>Email support</li>
+      </ul>
+      <a href="https://new-api-production-d6db.up.railway.app/register" class="btn-card btn-card-outline">Get Started</a>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="price-name">Pro</div>
+      <div class="price-amount"><sup>$</sup>29<span>/mo</span></div>
+      <div class="price-tokens">20M tokens / month</div>
+      <ul class="price-features">
+        <li>Everything in Starter</li>
+        <li>Priority routing</li>
+        <li>Multiple API keys</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="https://new-api-production-d6db.up.railway.app/register" class="btn-card btn-card-primary">Get Started</a>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Scale</div>
+      <div class="price-amount"><sup>$</sup>79<span>/mo</span></div>
+      <div class="price-tokens">100M tokens / month</div>
+      <ul class="price-features">
+        <li>Everything in Pro</li>
+        <li>SLA guarantee</li>
+        <li>Team management</li>
+        <li>Dedicated support</li>
+      </ul>
+      <a href="https://new-api-production-d6db.up.railway.app/register" class="btn-card btn-card-outline">Get Started</a>
+    </div>
+  </div>
+  <p style="text-align:center; color: var(--muted); margin-top: 1.5rem; font-size: .9rem;">Pay-as-you-go: <strong style="color: var(--text);">$0.75/M input &middot; $1.25/M output</strong></p>
+</section>
+
+<section class="section" id="comparison">
+  <div class="section-label">Price Comparison</div>
+  <h2>NovArc vs GPT-4o vs Claude</h2>
+  <p>All prices per million tokens.</p>
+  <div class="comparison-wrap">
+    <table>
+      <thead><tr><th>Provider</th><th>Model</th><th>Input ($ /M)</th><th>Output ($ /M)</th><th>vs GPT-4o</th></tr></thead>
+      <tbody>
+        <tr class="novarc-row"><td class="provider-name">NovArc API <span class="savings-badge">YOU</span></td><td>DeepSeek V3 / Qwen</td><td class="cheaper">$0.75</td><td class="cheaper">$1.25</td><td style="color:#4ade80;font-weight:700">Save 92%</td></tr>
+        <tr><td class="provider-name">OpenAI</td><td>GPT-4o</td><td class="expensive">$5.00</td><td class="expensive">$15.00</td><td style="color:#f87171">Baseline (expensive)</td></tr>
+        <tr><td class="provider-name">Anthropic</td><td>Claude 3.5 Sonnet</td><td class="expensive">$3.00</td><td class="expensive">$15.00</td><td style="color:#f87171">4&ndash;12&times; more</td></tr>
+        <tr><td class="provider-name">Google</td><td>Gemini 1.5 Pro</td><td class="expensive">$3.50</td><td class="expensive">$10.50</td><td style="color:#f87171">5&ndash;8&times; more</td></tr>
+        <tr><td class="provider-name">DeepSeek Direct</td><td>DeepSeek V3</td><td>$0.27</td><td>$1.10</td><td style="color:var(--muted)">Direct (no mgmt)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="color:var(--muted);font-size:.8rem;margin-top:1rem">* Prices as of Q1 2026.</p>
+</section>
+
+<section class="section" id="features">
+  <div class="section-label">Features</div>
+  <h2>Everything you need</h2>
+  <p>A complete AI gateway &mdash; not just a proxy.</p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">&#128268;</div><h3>OpenAI-Compatible</h3><p>Works with LangChain, LlamaIndex, AutoGen. Zero code changes beyond the base URL.</p></div>
+    <div class="feature-card"><div class="feature-icon">&#129504;</div><h3>Multi-Model Routing</h3><p>DeepSeek, Qwen, and more through one key. Smart routing for best cost/performance.</p></div>
+    <div class="feature-card"><div class="feature-icon">&#128202;</div><h3>Usage Dashboard</h3><p>Real-time token consumption, cost tracking, per-key analytics.</p></div>
+    <div class="feature-card"><div class="feature-icon">&#128273;</div><h3>Team API Keys</h3><p>Per-project keys with individual rate limits and spending caps.</p></div>
+    <div class="feature-card"><div class="feature-icon">&#9889;</div><h3>Low Latency</h3><p>Optimized routing with automatic failover.</p></div>
+    <div class="feature-card"><div class="feature-icon">&#128737;</div><h3>Enterprise Ready</h3><p>Rate limiting, request logging, audit trails. SLA on Scale plan.</p></div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="section-label">FAQ</div>
+  <h2>Frequently Asked Questions</h2>
+  <p>Everything you need to know before switching.</p>
+  <div class="faq-list">
+    <div class="faq-item open">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is NovArc really OpenAI-compatible? Do I need to rewrite my code?<span class="arrow">&#9658;</span></button>
+      <div class="faq-a"><p>Yes &mdash; completely. NovArc implements the same REST API spec as OpenAI, including <code>/v1/chat/completions</code> and <code>/v1/embeddings</code>. You only change one line: the <code>base_url</code>. Streaming, function calling, and system prompts all work identically.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What models are available?<span class="arrow">&#9658;</span></button>
+      <div class="faq-a"><p>NovArc provides <code>deepseek-chat</code> (DeepSeek V3), <code>qwen-plus</code>, <code>qwen-max</code>, and <code>qwen-turbo</code>. These match or exceed GPT-4o on most benchmarks at a fraction of the cost. Check the <a href="https://new-api-production-d6db.up.railway.app">dashboard</a> for the full list.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does billing work? Is there a free trial?<span class="arrow">&#9658;</span></button>
+      <div class="faq-a"><p>Every account gets <strong>5M free tokens</strong> on signup &mdash; no credit card required. Monthly plans start at $9/mo. Pay-as-you-go at <code>$0.75/M input &middot; $1.25/M output</code>. You're never charged automatically without a payment method.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Start building in 60 seconds</h2>
+  <p>Free 5M tokens. No credit card. Cancel anytime.</p>
+  <a href="https://new-api-production-d6db.up.railway.app/register" class="btn-primary">Create Free Account &rarr;</a>
+</section>
+
+<footer>
+  <div><div class="footer-logo">NovArc API</div><p>Frontier AI at 1/10th the price.</p></div>
+  <div><span style="color:var(--muted);font-size:.85rem">Questions? <a href="mailto:support@novarc.api" style="color:var(--accent2)">support@novarc.api</a></span><a href="https://new-api-production-d6db.up.railway.app">Console</a><a href="https://github.com/JohnSuperIndividual/novarc-landing">GitHub</a></div>
+</footer>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>NovArc API — Frontier AI at 1/10th the Price</title>
